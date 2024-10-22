@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INT</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('/static/Background_template.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-end;
+            text-align: right;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            top: 150px;
+            left: 150px;
+        }
+
+        /* Input container for aligning text box and button */
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        input[type="text"] {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid white;
+            width: 100%;
+            max-width: 400px;
+            font-size: 1.1em;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(240, 240, 240, 0.8);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: normal;
+            font-size: 1em;
+            margin-left: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #loadResult, #questionResult {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #ffffff;
+            text-align: right;
+        }
+
+        #answerResult {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            line-height: 1.5;
+            max-width: 100%;
+            width: 600px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #answerResult b {
+            color: #ffffff;
+        }
+
+        @media screen and (max-width: 768px) {
+            input[type="text"] {
+                width: 90%;
+            }
+            #answerResult {
+                width: 90%;
+            }
+            .content-wrapper {
+                top: 100px;
+                left: 50px;
+            }
+        }
+
+        /* Styling the scroll bar */
+        #answerResult::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #answerResult::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <!-- Load Data Section -->
+        <div class="input-container">
+            <input type="text" id="urlInput" placeholder="Enter Wikipedia URL...">
+            <button id="loadButton">load</button>
+        </div>
+        <div id="loadResult"></div>
+
+        <!-- Query Data Section -->
+        <div class="input-container">
+            <input type="text" id="queryInput" placeholder="Enter your query...">
+            <button id="queryButton">query</button>
+        </div>
+        <div id="questionResult"></div>
+        <div id="answerResult"></div>
+    </div>
+
+    <script>
+        document.getElementById('loadButton').onclick = async () => {
+            const url = document.getElementById('urlInput').value;
+            const response = await fetch('/load', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url }),
+            });
+
+            const result = await response.json();
+            document.getElementById('loadResult').innerText = result.message || "Error loading data.";
+        };
+
+        document.getElementById('queryButton').onclick = async () => {
+            const query = document.getElementById('queryInput').value;
+            const response = await fetch('/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            const result = await response.json();
+            document.getElementById('questionResult').innerText = "Query Result:";
+            document.getElementById('answerResult').innerText = result.combined_response || "Error retrieving data.";
+        };
+    </script>
+</body>
+</html>
