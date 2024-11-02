@@ -1,4 +1,4 @@
-INTELLEXA.AI
+# INTELLEXA.AI
 
 INTELLEXA.AI is a powerful application designed to extract, process, and query Wikipedia data using state-of-the-art machine learning techniques. This project integrates web scraping, vector embeddings, generative AI models, and an interactive web UI to create a fully functional knowledge retrieval system.
 
